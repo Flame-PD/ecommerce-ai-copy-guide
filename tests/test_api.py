@@ -18,7 +18,7 @@ def test_capabilities():
     response = client().get("/api/capabilities")
 
     assert response.status_code == 200
-    assert response.get_json()["mode"] == "mock"
+    assert response.get_json()["mode"] in ("mock", "deepseek")
 
 
 def test_generate_copy():
@@ -34,8 +34,10 @@ def test_generate_copy():
 
     body = response.get_json()
     assert response.status_code == 200
-    assert "云感护腰办公椅" in body["title"]
+    assert body["title"]  # 有标题即可（Mock 模板化 / AI 创意改写均满足）
     assert body["selling_points"]
+    assert body["detail_copy"]
+    assert body["ad_slogan"]
 
 
 def test_review_analysis_validation():

@@ -4,12 +4,17 @@ from flask import Flask, jsonify
 
 from backend.api.routes import api_bp
 from backend.config import AppConfig
+from backend.database import init_db
 
 
 def create_app(config: AppConfig | None = None) -> Flask:
     app_config = config or AppConfig.from_env()
     app = Flask(__name__)
+    app.json.ensure_ascii = False
     app.config["APP_CONFIG"] = app_config
+
+    if app_config.database_url:
+        init_db(app_config.database_url)
 
     @app.get("/health")
     def health() -> tuple[dict[str, object], int]:

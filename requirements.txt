@@ -5,5 +5,6 @@ psycopg[binary]>=3.2.10,<3.4
 redis>=5,<7
 Scrapy>=2.11,<3
 pydantic>=2.12,<3
+sqlalchemy>=2.0,<3
 pytest>=8.3,<9
 ruff>=0.5,<0.15

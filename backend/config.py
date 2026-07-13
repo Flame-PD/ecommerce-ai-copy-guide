@@ -17,6 +17,9 @@ class AppConfig:
     redis_url: str = ""
     ai_provider: str = ""
     ai_model: str = ""
+    ai_api_key: str = ""
+    ai_base_url: str = ""
+
 
     @classmethod
     def from_env(cls) -> "AppConfig":
@@ -29,6 +32,8 @@ class AppConfig:
             redis_url=os.getenv("REDIS_URL", ""),
             ai_provider=os.getenv("AI_PROVIDER", ""),
             ai_model=os.getenv("AI_MODEL", ""),
+            ai_api_key=os.getenv("AI_API_KEY", ""),
+            ai_base_url=os.getenv("AI_BASE_URL", ""),
         )
 
     def public_summary(self) -> dict[str, str | bool | int]:
