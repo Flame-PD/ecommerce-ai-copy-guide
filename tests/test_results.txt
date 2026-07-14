@@ -1,0 +1,33 @@
+﻿============================= test session starts =============================
+platform win32 -- Python 3.12.4, pytest-8.3.3, pluggy-1.6.0 -- D:\Anaconda\python.exe
+cachedir: .pytest_cache
+rootdir: D:\huadi\Final
+configfile: pyproject.toml
+plugins: anyio-4.14.1, langsmith-0.9.8
+collecting ... collected 23 items
+
+tests/test_ai.py::test_ai_copy_generation PASSED                         [  4%]
+tests/test_ai.py::test_ai_script_generation PASSED                       [  8%]
+tests/test_ai.py::test_ai_script_list PASSED                             [ 13%]
+tests/test_ai.py::test_ai_copy_requires_merchant PASSED                  [ 17%]
+tests/test_health.py::test_login_success PASSED                          [ 21%]
+tests/test_health.py::test_login_wrong_password PASSED                   [ 26%]
+tests/test_health.py::test_login_nonexistent_user PASSED                 [ 30%]
+tests/test_health.py::test_unauthorized_access PASSED                    [ 34%]
+tests/test_health.py::test_user_cannot_access_merchant PASSED            [ 39%]
+tests/test_orders.py::test_checkout_and_pay_flow PASSED                  [ 43%]
+tests/test_orders.py::test_my_orders PASSED                              [ 47%]
+tests/test_orders.py::test_all_orders_merchant PASSED                    [ 52%]
+tests/test_orders.py::test_orders_require_auth PASSED                    [ 56%]
+tests/test_products.py::test_list_products PASSED                        [ 60%]
+tests/test_products.py::test_get_product_by_id PASSED                    [ 65%]
+tests/test_products.py::test_product_categories PASSED                   [ 69%]
+tests/test_products.py::test_create_product_requires_merchant PASSED     [ 73%]
+tests/test_products.py::test_soft_delete_product PASSED                  [ 78%]
+tests/test_reviews.py::test_create_review PASSED                         [ 82%]
+tests/test_reviews.py::test_product_reviews PASSED                       [ 86%]
+tests/test_reviews.py::test_review_stats PASSED                          [ 91%]
+tests/test_reviews.py::test_review_summary PASSED                        [ 95%]
+tests/test_reviews.py::test_review_requires_auth PASSED                  [100%]
+
+============================= 23 passed in 2.75s ==============================
