@@ -51,7 +51,7 @@ class DocumentLoader:
 
     # ------------------------------------------------------------------
     def __init__(self) -> None:
-        self._settings = get_settings()
+        pass
 
     # ------------------------------------------------------------------
     def load_from_dicts(self, products: List[Dict[str, Any]]) -> List[str]:

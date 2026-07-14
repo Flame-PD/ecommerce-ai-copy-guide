@@ -190,3 +190,42 @@ ecommerce-ai-copy-guide/
 ## 许可证
 
 MIT
+
+
+架构调用链
+
+前端 (Vue3 :5173)
+    │
+    ▼
+后端 (FastAPI :8001)
+    │
+    ├── /api/ai/copy ────→ ai_client.generate_titles() ──→ AI Service :8000
+    │                     ai_client.generate_description()   (优先)
+    │                     ┆ 失败回退 ┆
+    │                     ai_service.generate_product_copy()  (本地 DeepSeek)
+    │
+    ├── /api/ai/script ──→ ai_client.generate_livestream() ──→ AI Service :8000
+    │
+    ├── /api/chat/ask ───→ ai_client.chat() ──→ AI Service :8000 (RAG)
+    │                      ┆ 失败/无结果 ┆
+    │                      rag_service + ai_service (本地 TF-IDF + DeepSeek)
+    │
+    └── /api/chat/sync-to-ai-service ──→ ai_client.ingest() ──→ AI Service :8000
+启动方式
+
+# 终端 1 — 启动 AI Service
+cd ecommerce-ai-copy-guide
+uvicorn ai_service.app:app --host 0.0.0.0 --port 8000
+
+# 终端 2 — 启动后端
+cd ecommerce-ai-copy-guide
+uvicorn backend.app.main:app --host 0.0.0.0 --port 8001
+
+# 终端 3 — 启动前端
+cd ecommerce-ai-copy-guide/frontend
+npm run dev
+关键特性
+优雅降级：AI Service 不可用时，自动回退到后端原有的直接 DeepSeek 调用
+零破坏：不改动后端数据库、认证、CRUD 等业务逻辑
+一键同步：调用 POST /api/chat/sync-to-ai-service 将数据库商品推送到 AI Service 的 FAISS 知识库
+配置开关：.env 中设 AI_SERVICE_ENABLED=false 即可完全禁用 AI Service，只用本地逻辑

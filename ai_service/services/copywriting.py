@@ -6,47 +6,14 @@ with the product data, send to the LLM, and parse the JSON response.
 
 from __future__ import annotations
 
-import json
-import re
 from typing import Optional
 
 from ai_service.llm.dispatcher import LLMDispatcher
 from ai_service.models.request import DescriptionRequest, TitleRequest
 from ai_service.models.response import DescriptionResponse, TitleResponse
+from ai_service.utils.helpers import extract_json
 from ai_service.utils.logger import logger
 from ai_service.utils.prompt_loader import PromptLoader
-
-
-# ---------------------------------------------------------------------------
-# Helpers
-# ---------------------------------------------------------------------------
-
-_JSON_PATTERN = re.compile(r"```json\s*(.*?)\s*```", re.DOTALL)
-
-
-def _extract_json(text: str) -> dict:
-    """Extract a JSON object from an LLM response.
-
-    Tries `````json … ``` `` fences first, then falls back to raw parsing.
-
-    Parameters
-    ----------
-    text : str
-        Raw LLM output.
-
-    Returns
-    -------
-    dict
-        Parsed JSON.
-
-    Raises
-    ------
-    ValueError
-        If no valid JSON object can be extracted.
-    """
-    m = _JSON_PATTERN.search(text)
-    json_str = m.group(1) if m else text
-    return json.loads(json_str.strip())
 
 
 # ---------------------------------------------------------------------------
@@ -100,7 +67,7 @@ class TitleGenerator:
         )
 
         raw = self._dispatcher.generate(prompt)
-        data = _extract_json(raw)
+        data = extract_json(raw)
         titles = data.get("titles", [])
 
         logger.info("TitleGenerator done | {} titles generated", len(titles))
@@ -159,7 +126,7 @@ class DescriptionGenerator:
         )
 
         raw = self._dispatcher.generate(prompt)
-        data = _extract_json(raw)
+        data = extract_json(raw)
 
         description = data.get("description", raw)
 

@@ -6,23 +6,14 @@ selling points, audience interaction, promotion, and closing.
 
 from __future__ import annotations
 
-import json
-import re
 from typing import Optional
 
 from ai_service.llm.dispatcher import LLMDispatcher
 from ai_service.models.request import LivestreamRequest
 from ai_service.models.response import LivestreamResponse
+from ai_service.utils.helpers import extract_json
 from ai_service.utils.logger import logger
 from ai_service.utils.prompt_loader import PromptLoader
-
-_JSON_PATTERN = re.compile(r"```json\s*(.*?)\s*```", re.DOTALL)
-
-
-def _extract_json(text: str) -> dict:
-    """Extract a JSON object from LLM output."""
-    m = _JSON_PATTERN.search(text)
-    return json.loads((m.group(1) if m else text).strip())
 
 
 class LivestreamScriptGenerator:
@@ -73,7 +64,7 @@ class LivestreamScriptGenerator:
         )
 
         raw = self._dispatcher.generate(prompt)
-        data = _extract_json(raw)
+        data = extract_json(raw)
 
         logger.info("LivestreamScriptGenerator done | {} chars", len(data.get("script", "")))
         return LivestreamResponse(

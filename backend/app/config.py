@@ -3,9 +3,18 @@ from functools import lru_cache
 
 
 class Settings(BaseSettings):
+    # -- DeepSeek (fallback when AI service is disabled) -------------------
     deepseek_api_key: str = ""
     deepseek_base_url: str = "https://api.deepseek.com"
+
+    # -- AI Intelligent Service Layer --------------------------------------
+    ai_service_url: str = "http://localhost:8000"
+    ai_service_enabled: bool = True
+
+    # -- Database ----------------------------------------------------------
     database_url: str = "sqlite:///./ecommerce_ai.db"
+
+    # -- Auth --------------------------------------------------------------
     secret_key: str = "default-secret-key-change-in-production"
     algorithm: str = "HS256"
     access_token_expire_minutes: int = 10080
