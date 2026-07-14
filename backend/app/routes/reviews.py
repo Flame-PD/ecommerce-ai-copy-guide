@@ -186,7 +186,7 @@ def analyze_upload(
     file: UploadFile = File(...),
     product_id: int = None,
     db: Session = Depends(get_db),
-    _: User = Depends(require_merchant),
+    current_user: User = Depends(require_merchant),
 ):
     ext = file.filename.split(".")[-1].lower()
     content = file.file.read()
@@ -208,13 +208,13 @@ def analyze_upload(
     if product_id:
         for t in texts:
             sentiment = sentiment_service.analyze(t)
-            db.add(Review(user_id=1, product_id=product_id, rating=5, content=t, sentiment=sentiment, source="merchant"))
+            db.add(Review(user_id=current_user.id, product_id=product_id, rating=5, content=t, sentiment=sentiment, source="merchant"))
         db.commit()
     return {"ok": True, "count": len(texts), "stats": result}
 
 
 @router.post("/import")
-def import_reviews(file: UploadFile = File(...), db: Session = Depends(get_db), _: User = Depends(require_merchant)):
+def import_reviews(file: UploadFile = File(...), db: Session = Depends(get_db), current_user: User = Depends(require_merchant)):
     ext = file.filename.split(".")[-1].lower()
     if ext not in ("xlsx", "xls"):
         raise HTTPException(status_code=400, detail="仅支持xlsx/xls")
@@ -232,7 +232,7 @@ def import_reviews(file: UploadFile = File(...), db: Session = Depends(get_db), 
         if not content:
             continue
         sentiment = sentiment_service.analyze(content)
-        db.add(Review(user_id=1, product_id=product_id, rating=rating, content=content, sentiment=sentiment, source="merchant"))
+        db.add(Review(user_id=current_user.id, product_id=product_id, rating=rating, content=content, sentiment=sentiment, source="merchant"))
         count += 1
     db.commit()
     return {"ok": True, "count": count}
